@@ -67,4 +67,14 @@ public class TagLink implements Serializable {
                 .toArray(TagLink[]::new);
         return Arrays.asList(tagLinks);
     }
+
+    @Override
+    public String toString() {
+        return "TagLink{" +
+                "id='" + id + '\'' +
+                ", href='" + href + '\'' +
+                ", tag='" + tag + '\'' +
+                ", title='" + title + '\'' +
+                '}';
+    }
 }

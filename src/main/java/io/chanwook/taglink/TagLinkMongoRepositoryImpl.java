@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
@@ -33,8 +34,12 @@ public class TagLinkMongoRepositoryImpl implements TagLinkMongoRepositoryCustom 
     }
 
     @Override
-    public List<TagLink> findByTag(String[] tags) {
+    public List<TagLink> findByTag(String[] tags, String currentHref) {
         final List<TagLink> result = mongoOperations.find(query(where("tag").in(tags)), TagLink.class);
-        return result;
+
+        final TagLink[] objects = result.stream()
+                .filter(tagLink -> !currentHref.equals(tagLink.getHref()))
+                .toArray(TagLink[]::new);
+        return Arrays.asList(objects);
     }
 }

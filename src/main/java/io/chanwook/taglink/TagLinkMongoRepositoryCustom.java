@@ -18,7 +18,8 @@ public interface TagLinkMongoRepositoryCustom {
      * tag에 해당하는 전체 태그링크 조회
      *
      * @param tags
+     * @param currentHref
      * @return
      */
-    List<TagLink> findByTag(String[] tags);
+    List<TagLink> findByTag(String[] tags, String currentHref);
 }

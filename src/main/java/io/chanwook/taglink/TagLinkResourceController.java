@@ -28,22 +28,38 @@ public class TagLinkResourceController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/tag/search")
     @ResponseBody
-    public ResponseEntity<?> search(@RequestParam("tags") String[] requestTags,
+    public ResponseEntity<?> search(@RequestParam("tags") String requestTags,
                                     @RequestParam(value = "title", required = false) String title,
-                                    @RequestParam(value = "href", required = false) String href) {
+                                    @RequestParam(value = "href", required = false, defaultValue = "") String href) {
 
         if (logger.isDebugEnabled()) {
-            logger.debug("> Receive Request: " + Arrays.toString(requestTags) + ", " + title + ", " + href);
+            logger.debug("> Receive Request:: " + requestTags + " :: " + title + " :: " + href);
         }
 
+        String[] tags = spiltTag(requestTags);
         if (isEnoughParam(title, href)) {
-            repository.bulkInsertIfNotExist(TagLink.create(requestTags, title, href));
+            if (logger.isDebugEnabled()) {
+                logger.debug("> Create TagLink :: " + Arrays.toString(tags));
+            }
+            repository.bulkInsertIfNotExist(TagLink.create(tags, title, href));
         }
 
-        List<TagLink> tagLinks = repository.findByTag(requestTags);
+        List<TagLink> tagLinks = repository.findByTag(tags, href);
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("> Load tag (" + tagLinks.size() + ") :: " + tagLinks);
+        }
 
         final Resources<TagLink> resources = new Resources<>(tagLinks);
         return ResponseEntity.ok(resources);
+    }
+
+    private String[] spiltTag(String requestTags) {
+        final String[] tags = StringUtils.split(requestTags, ",");
+        return Arrays.stream(tags)
+                .filter(t -> StringUtils.hasText(t))
+                .map(t -> StringUtils.trimWhitespace(t))
+                .toArray(String[]::new);
     }
 
     private boolean isEnoughParam(@RequestParam(value = "title", required = false) String title, @RequestParam(value = "href", required = false) String href) {
