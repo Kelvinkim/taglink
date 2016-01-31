@@ -1,5 +1,7 @@
 package io.chanwook.taglink;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.hateoas.Resources;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -17,6 +20,8 @@ import java.util.List;
  */
 @RepositoryRestController
 public class TagLinkResourceController {
+
+    private final Logger logger = LoggerFactory.getLogger(TagLinkResourceController.class);
 
     @Autowired
     TagLinkMongoRepository repository;
@@ -26,6 +31,10 @@ public class TagLinkResourceController {
     public ResponseEntity<?> search(@RequestParam("tags") String[] requestTags,
                                     @RequestParam(value = "title", required = false) String title,
                                     @RequestParam(value = "href", required = false) String href) {
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("> Receive Request: " + Arrays.toString(requestTags) + ", " + title + ", " + href);
+        }
 
         if (isEnoughParam(title, href)) {
             repository.bulkInsertIfNotExist(TagLink.create(requestTags, title, href));
