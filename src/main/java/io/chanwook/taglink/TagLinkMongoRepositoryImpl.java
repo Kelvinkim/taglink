@@ -35,7 +35,7 @@ public class TagLinkMongoRepositoryImpl implements TagLinkMongoRepositoryCustom 
 
     @Override
     public List<TagLink> findByTag(String[] tags, String currentHref) {
-        final List<TagLink> result = mongoOperations.find(query(where("tag").in(tags)), TagLink.class);
+        final List<TagLink> result = mongoOperations.find(query(where("tag").in(Arrays.asList(tags))), TagLink.class);
 
         final TagLink[] objects = result.stream()
                 .filter(tagLink -> !currentHref.equals(tagLink.getHref()))

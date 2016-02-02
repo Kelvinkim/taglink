@@ -55,7 +55,7 @@ public class TagLinkResourceController {
     }
 
     private String[] spiltTag(String requestTags) {
-        final String[] tags = StringUtils.split(requestTags, ",");
+        final String[] tags = requestTags.split(",");
         return Arrays.stream(tags)
                 .filter(t -> StringUtils.hasText(t))
                 .map(t -> StringUtils.trimWhitespace(t))
