@@ -19,7 +19,8 @@ public interface TagLinkMongoRepositoryCustom {
      *
      * @param tags
      * @param currentHref
+     * @param profile
      * @return
      */
-    List<TagLink> findByTag(String[] tags, String currentHref);
+    List<TagLink> findByTag(String[] tags, String currentHref, String profile);
 }

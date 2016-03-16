@@ -20,13 +20,16 @@ public class TagLink implements Serializable {
 
     private String tag;
 
+    private String target;
+
     public TagLink() {
     }
 
-    public TagLink(String title, String href, String tag) {
+    public TagLink(String title, String href, String tag, String target) {
         this.title = title;
         this.href = href;
         this.tag = tag;
+        this.target = target;
     }
 
     public String getId() {
@@ -61,9 +64,17 @@ public class TagLink implements Serializable {
         this.title = title;
     }
 
-    public static List<TagLink> create(String[] requestTags, String title, String href) {
+    public String getTarget() {
+        return target;
+    }
+
+    public void setTarget(String target) {
+        this.target = target;
+    }
+
+    public static List<TagLink> create(String[] requestTags, String title, String href, String profile) {
         final TagLink[] tagLinks = Arrays.stream(requestTags)
-                .map(tag -> new TagLink(title, href, tag))
+                .map(tag -> new TagLink(title, href, tag, profile))
                 .toArray(TagLink[]::new);
         return Arrays.asList(tagLinks);
     }
@@ -75,6 +86,7 @@ public class TagLink implements Serializable {
                 ", href='" + href + '\'' +
                 ", tag='" + tag + '\'' +
                 ", title='" + title + '\'' +
+                ", target='" + target + '\'' +
                 '}';
     }
 }
